@@ -1,0 +1,14 @@
+services:
+  cms:
+    build:
+      context: ./apps/cms
+      target: prod
+    restart: always
+    volumes: []
+
+  web:
+    build:
+      context: ./apps/web
+      target: prod
+    restart: always
+    volumes: []

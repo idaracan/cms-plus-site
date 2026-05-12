@@ -1,0 +1,8 @@
+{
+  "name": "vet",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "engines": {
+    "node": ">=20"
+  }
+}

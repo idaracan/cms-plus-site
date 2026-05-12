@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: strapi
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  cms:
+    build:
+      context: ./apps/cms
+      target: dev
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "1337:1337"
+    env_file: ./apps/cms/.env
+    volumes:
+      - ./apps/cms/src:/app/src
+      - ./apps/cms/config:/app/config
+      - ./apps/cms/public/uploads:/app/public/uploads
+      - cms_node_modules:/app/node_modules
+
+  web:
+    build:
+      context: ./apps/web
+      target: dev
+    restart: unless-stopped
+    depends_on:
+      - cms
+    ports:
+      - "3000:3000"
+    env_file: ./apps/web/.env
+    volumes:
+      - ./apps/web:/app
+      - web_node_modules:/app/node_modules
+      - web_next:/app/.next
+
+volumes:
+  pg_data:
+  cms_node_modules:
+  web_node_modules:
+  web_next:
